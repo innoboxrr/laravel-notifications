@@ -2,41 +2,44 @@
 
 namespace Innoboxrr\LaravelNotifications\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 
 class NotificationController extends Controller
 {
-    public function getAllNotifications($userId)
+    public function __construct()
     {
-        $user = User::findOrFail($userId);
+        $this->middleware('auth:sanctum');
+    }
+
+    public function getAllNotifications()
+    {
+        $user = auth()->user();
         return response()->json($user->notifications);
     }
 
-    public function getUnreadNotifications($userId)
+    public function getUnreadNotifications()
     {
-        $user = User::findOrFail($userId);
+        $user = auth()->user();
         return response()->json($user->unreadNotifications);
     }
 
-    public function markAsRead($userId)
+    public function markAsRead()
     {
-        $user = User::findOrFail($userId);
+        $user = auth()->user();
         $user->unreadNotifications->markAsRead();
         return response('Notifications marked as read');
     }
 
-    public function deleteNotifications($userId)
+    public function deleteNotifications()
     {
-        $user = User::findOrFail($userId);
+        $user = auth()->user();
         $user->notifications()->delete();
         return response('Notifications deleted');
     }
 
-    public function markNotificationAsRead($userId, $notificationId)
+    public function markNotificationAsRead($notificationId)
     {
-        $user = User::findOrFail($userId);
+        $user = auth()->user();
         $notification = $user->notifications()->where('id', $notificationId)->first();
 
         if ($notification) {
