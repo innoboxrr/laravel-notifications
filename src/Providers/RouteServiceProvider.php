@@ -19,7 +19,7 @@ class RouteServiceProvider extends ServiceProvider
             ->prefix('innoboxrr/notifications')
             ->as('innoboxrr.notifications.')
             ->namespace('Innoboxrr\LaravelNotifications\Http\Controllers')
-            ->group(__DIR__ . '../../routes/web.php');
+            ->group(__DIR__ . '/../../routes/web.php');
     }
 
 }
