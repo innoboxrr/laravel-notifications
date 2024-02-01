@@ -41,5 +41,4 @@ Lista de los autores del proyecto.
 
 ## Notas para el desarrollador
 
-## TODO
- - Crear las relaciones externas desde CoursePackage hacia el exterior: https://prnt.sc/Ioy_2ryn4pii
+## Frontend API
