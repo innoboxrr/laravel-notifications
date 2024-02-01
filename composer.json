@@ -1,0 +1,32 @@
+{
+    "name": "innoboxrr/laravel-notifications",
+    "description": "Facilita el API de Notificaciones de Laravel",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Innoboxrr\\LaravelNotifications\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Homero Raul",
+            "email": "h.raulvc@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "orchestra/testbench": "^8.21"
+    },
+    "require": {
+        "innoboxrr/larapack-generator": "^4.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Innoboxrr\\LaravelNotifications\\Providers\\AppServiceProvider",
+                "Innoboxrr\\LaravelNotifications\\Providers\\AuthServiceProvider",
+                "Innoboxrr\\LaravelNotifications\\Providers\\EventServiceProvider",
+                "Innoboxrr\\LaravelNotifications\\Providers\\RouteServiceProvider"
+            ]
+        }
+    }
+}
