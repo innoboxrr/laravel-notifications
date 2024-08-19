@@ -3,6 +3,7 @@
 namespace Innoboxrr\LaravelNotifications\Providers;
 
 use Illuminate\Support\Facades\Route;
+use Innoboxrr\LaravelNotifications\Http\Controllers\NotificationController;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -15,6 +16,10 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapWebRoutes()
     {
+        Route::middleware('web')
+            ->get('notification/read/{notificationId}', [NotificationController::class, 'markNotificationAsRead'])
+            ->name('read.noification');
+
         Route::middleware('web')
             ->prefix('innoboxrr/notifications')
             ->as('innoboxrr.notifications.')
