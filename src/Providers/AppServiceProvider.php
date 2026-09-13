@@ -3,6 +3,7 @@
 namespace Innoboxrr\LaravelNotifications\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Innoboxrr\LaravelNotifications\Console\Commands\InstallCommand;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
     {
 
         if ($this->app->runningInConsole()) {
+
+            $this->commands([InstallCommand::class]);
 
             $this->publishes([__DIR__ . '/../../config/innoboxrrlaravelnotifications.php' => config_path('innoboxrrlaravelnotifications.php')], 'config');
 
