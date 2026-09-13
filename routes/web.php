@@ -10,6 +10,9 @@ Route::get('notifications', [NotificationController::class, 'getAllNotifications
 Route::get('notifications/unread', [NotificationController::class, 'getUnreadNotifications'])
     ->name('index.unread');
 
+Route::get('notifications/unread/count', [NotificationController::class, 'countUnreadNotifications'])
+    ->name('index.unread.count');
+
 Route::post('notifications/markAsRead', [NotificationController::class, 'markAsRead'])
     ->name('mark.all.as.read');
 
@@ -18,4 +21,3 @@ Route::delete('notifications', [NotificationController::class, 'deleteNotificati
 
 Route::post('notifications/{notificationId}/markAsRead', [NotificationController::class, 'markNotificationAsRead'])
     ->name('mark.as.read');
-

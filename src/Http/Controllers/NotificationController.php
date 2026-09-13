@@ -2,6 +2,7 @@
 
 namespace Innoboxrr\LaravelNotifications\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -12,16 +13,23 @@ class NotificationController extends Controller
         $this->middleware('auth:sanctum');
     }
 
-    public function getAllNotifications()
+    public function getAllNotifications(Request $request)
     {
-        $user = auth()->user();
-        return response()->json($user->notifications);
+        return response()->json($this->limited($request, $request->user()->notifications()));
     }
 
-    public function getUnreadNotifications()
+    public function getUnreadNotifications(Request $request)
     {
-        $user = auth()->user();
-        return response()->json($user->unreadNotifications);
+        return response()->json($this->limited($request, $request->user()->unreadNotifications()));
+    }
+
+    /**
+     * Para el indicador de la barra superior: contar no necesita traer las
+     * notificaciones.
+     */
+    public function countUnreadNotifications(Request $request)
+    {
+        return response()->json(['count' => $request->user()->unreadNotifications()->count()]);
     }
 
     public function markAsRead(Request $request)
@@ -79,5 +87,23 @@ class NotificationController extends Controller
         }
 
         return Redirect::to($action ?? '/');
+    }
+
+    /**
+     * `limit` es opcional y trae las N mas recientes. Sin el se devuelven todas,
+     * como siempre, y la respuesta sigue siendo un arreglo: los clientes que ya
+     * existen no notan nada.
+     */
+    protected function limited(Request $request, Relation $notifications)
+    {
+        $validated = $request->validate([
+            'limit' => ['sometimes', 'integer', 'min:1'],
+        ]);
+
+        if (isset($validated['limit'])) {
+            $notifications->limit((int) $validated['limit']);
+        }
+
+        return $notifications->get();
     }
 }
