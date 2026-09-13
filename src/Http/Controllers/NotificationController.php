@@ -2,6 +2,7 @@
 
 namespace Innoboxrr\LaravelNotifications\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
 class NotificationController extends Controller
@@ -23,31 +24,60 @@ class NotificationController extends Controller
         return response()->json($user->unreadNotifications);
     }
 
-    public function markAsRead()
+    public function markAsRead(Request $request)
     {
-        $user = auth()->user();
-        $user->unreadNotifications->markAsRead();
+        // Una sola consulta en lugar de cargar y guardar cada notificacion.
+        $count = $request->user()->unreadNotifications()->update(['read_at' => now()]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'count' => $count]);
+        }
+
         return response('Notifications marked as read');
     }
 
-    public function deleteNotifications()
+    public function deleteNotifications(Request $request)
     {
-        $user = auth()->user();
-        $user->notifications()->delete();
+        $count = $request->user()->notifications()->delete();
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'count' => $count]);
+        }
+
         return response('Notifications deleted');
     }
 
-    public function markNotificationAsRead($notificationId)
+    /**
+     * La usan dos clientes distintos: el enlace de un correo, que es una
+     * navegacion y tiene que acabar en la accion de la notificacion, y la SPA,
+     * que pide por XHR y necesita JSON. Una redireccion a una peticion XHR la
+     * sigue el navegador en silencio y devuelve el HTML de la pagina destino.
+     */
+    public function markNotificationAsRead(Request $request, $notificationId)
     {
-        $user = auth()->user();
-        $notification = $user->notifications()->where('id', $notificationId)->first();
+        $notification = $request->user()->notifications()->where('id', $notificationId)->first();
 
-        if ($notification) {
-            $notification->markAsRead();
-            $actionUrl = isset($notification->data['action']) ? $notification->data['action'] : '/';
-            return Redirect::to($actionUrl);
+        if (! $notification) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Notification not found'], 404);
+            }
+
+            return response('Notification not found', 404);
         }
 
-        return response('Notification not found', 404);
+        $notification->markAsRead();
+
+        $action = $notification->data['action'] ?? null;
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'id' => $notification->id,
+                'action' => $action,
+                'read_at' => $notification->read_at?->toJSON(),
+            ]);
+        }
+
+        return Redirect::to($action ?? '/');
     }
 }
