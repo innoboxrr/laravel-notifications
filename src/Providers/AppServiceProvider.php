@@ -7,28 +7,22 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
 
-    public function register()
+    public function register(): void
     {
-        
-        // $this->mergeConfigFrom(__DIR__ . '/../../config/innoboxrrlaravelnotifications.php', 'innoboxrrlaravelnotifications');
+
+        $this->mergeConfigFrom(__DIR__ . '/../../config/innoboxrrlaravelnotifications.php', 'innoboxrrlaravelnotifications');
 
     }
 
-    public function boot()
+    public function boot(): void
     {
-        
-        // $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
-
-        // $this->loadViewsFrom(__DIR__.'/../../resources/views', 'innoboxrrlaravelnotifications');
 
         if ($this->app->runningInConsole()) {
-            
-            // $this->publishes([__DIR__.'/../../resources/views' => resource_path('views/vendor/innoboxrrlaravelnotifications'),], 'views');
 
-            // $this->publishes([__DIR__.'/../../config/innoboxrrlaravelnotifications.php' => config_path('innoboxrrlaravelnotifications.php')], 'config');
+            $this->publishes([__DIR__ . '/../../config/innoboxrrlaravelnotifications.php' => config_path('innoboxrrlaravelnotifications.php')], 'config');
 
         }
 
     }
-    
+
 }
