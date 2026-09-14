@@ -139,3 +139,7 @@ La suite monta una aplicación de Testbench con Sanctum, un usuario `Notifiable`
 ## Licencia
 
 MIT.
+
+## Documentación / Documentation
+
+Documentación completa del ecosistema, en español y en inglés / Full ecosystem documentation, in Spanish and English: <https://innoboxrr.github.io/docs/paquetes/laravel-notifications>
